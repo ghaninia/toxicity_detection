@@ -182,34 +182,40 @@ class PersianSwearDetector:
 
     def predict(self, text):
         """
-        Predict using ML model and rule-based method (for compatibility)
+        Predict using ML model and rule-based method with weighted combination
         """
         if not isinstance(text, str) or not text.strip():
             raise ValueError("Invalid input text.")
+
         processed_text = self.preprocess_text(text)
         rule_based_result = self.rule_based_check(processed_text)
-        result = {
-            "text": text,
-            "processed_text": processed_text,
-            "rule_based_detection": rule_based_result,
-            "ml_detection": False,
-            "ml_confidence": 0.0,
-            "final_prediction": rule_based_result,
-            "confidence": 0.7 if rule_based_result else 0.0,
-            "used_ml_prediction": False
-        }
-        # If model is trained, use ML prediction
+        rule_based_conf = 0.7 if rule_based_result else 0.0  # default confidence for rule-based
+
+        ml_prob = 0.0
+        ml_prediction = False
+        used_ml = False
+
+        # Use ML prediction if model is trained
         if self.is_trained:
             ml_prob = self.pipeline.predict_proba([processed_text])[0][1]
             ml_prediction = ml_prob >= 0.5
-            result.update({
-                "ml_detection": bool(ml_prediction),
-                "ml_confidence": float(ml_prob),
-                "final_prediction": bool(rule_based_result or ml_prediction),
-                "confidence": float(max(ml_prob, 0.7 if rule_based_result else 0.0)),
-                "used_ml_prediction": True
-            })
-        return result
+            used_ml = True
+
+        # Combine rule-based and ML using weighted sum
+        # weight_rule = 0.3, weight_ml = 0.7
+        final_confidence = (0.3 * rule_based_conf) + (0.7 * ml_prob)
+        final_prediction = final_confidence >= 0.5
+
+        return {
+            "text": text,
+            "processed_text": processed_text,
+            "rule_based_detection": bool(rule_based_result),
+            "ml_detection": bool(ml_prediction),
+            "ml_confidence": float(ml_prob),
+            "final_prediction": bool(final_prediction),
+            "confidence": float(final_confidence),
+            "used_ml_prediction": bool(used_ml)
+        }
 
 def main():
     # File paths
