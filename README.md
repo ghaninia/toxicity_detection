@@ -1,81 +1,109 @@
-# Persian Swear Detector
+# 🛡️ Persian Swear Detector
 
-This project uses machine learning and rule-based methods to detect swear words in Persian text. It loads datasets from the `dataset` directory and can be run locally or inside a Docker container.
+A robust and easy-to-use Python tool for detecting Persian (Farsi) swear words in text using both rule-based and machine learning (ML) approaches.
 
-## Features
-- Detects Persian swear words using both rule-based and ML approaches
-- Outputs results in JSON format with a status field
-- Easily extensible with new datasets
+## 🚀 Features
 
-## Project Structure
+- **Hybrid Detection**: Combines rule-based and ML-based detection for high accuracy.
+- **Customizable Dataset**: Easily extend the list of swear and normal words.
+- **Persian Language Support**: Handles Persian text preprocessing and normalization.
+- **CLI Interface**: Simple command-line interface for quick testing.
+- **Model Persistence**: Save and load trained models for fast deployment.
+
+## 📦 Project Structure
+
 ```
+├── swear_detector.py         # Main detector script
+├── requirements.txt          # Python dependencies
 ├── dataset/
-│   ├── swear_words.json
-│   └── normal_words.json
+│   ├── swear_words.json      # List of Persian swear words
+│   └── normal_words.json     # List of normal (non-swear) words
 ├── models/
-│   └── swear_detector_model.pkl
-├── swear_detector.py
-├── requirements.txt
-├── Dockerfile
-├── docker-compose.yml
-└── README.md
+│   └── swear_detector_model.pkl # Trained ML model
+├── Dockerfile                # Docker support
+├── docker-compose.yml        # Docker Compose config
+└── README.md                 # This file
 ```
 
-## Requirements
-- Python 3.9+
-- See `requirements.txt` for Python dependencies
-- Docker (optional)
-- Docker Compose (optional)
+## 🏁 Getting Started
 
-## Installation (Local)
-1. Clone the repository.
-2. Install dependencies:
-   ```bash
-   pip install -r requirements.txt
-   ```
-3. Run the detector:
-   ```bash
-   python swear_detector.py
-   ```
+### 1. Clone the Repository
 
-## Usage
-- Enter your text when prompted. Type `exit` to quit.
-- Output will be in JSON format, e.g.:
-  ```json
-  {
-    "status": "ok",
-    "result": {
-      "text": "متن تستی",
-      "processed_text": "...",
-      "rule_based_detection": false,
-      "ml_detection": false,
-      "ml_confidence": 0.01,
-      "final_prediction": false,
-      "confidence": 0.01
-    }
-  }
-  ```
+```bash
+git clone https://github.com/yourusername/swear-persian.git
+cd swear-persian
+```
 
-## Running with Docker
-1. Build the Docker image:
-   ```bash
-   docker build -t persian-swear-detector .
-   ```
-2. Run the container:
-   ```bash
-   docker run -it --rm -v $(pwd)/dataset:/app/dataset -v $(pwd)/models:/app/models persian-swear-detector
-   ```
+### 2. Install Dependencies
 
-## Running with Docker Compose
-1. Start the service:
-   ```bash
-   docker-compose up --build
-   ```
-2. Attach to the container:
-   ```bash
-   docker attach swear-detector
-   ```
+```bash
+pip install -r requirements.txt
+```
 
-## Dataset
-- `dataset/swear_words.json`: List of Persian swear words.
-- `dataset/normal_words.json`: List of normal Persian sentences.
+### 3. Prepare Datasets
+
+- Edit `dataset/swear_words.json` and `dataset/normal_words.json` to add your own words.
+
+### 4. Train or Use the Model
+
+- **Train:**
+  - If both dataset files exist, the model will train automatically on first run.
+- **Use Pretrained Model:**
+  - If `models/swear_detector_model.pkl` exists, it will be loaded automatically.
+
+### 5. Run the Detector
+
+```bash
+python3 swear_detector.py
+```
+
+- Enter your Persian text when prompted.
+- Type `exit` to quit.
+
+## 🧠 How It Works
+
+- **Rule-Based:** Checks for exact and substring matches from the swear words list.
+- **ML-Based:** Uses a Logistic Regression classifier with TF-IDF features for character n-grams.
+- **Hybrid Output:** Both methods are used; the result includes whether ML prediction was used.
+
+## 📝 Example Output
+
+```json
+{
+  "text": "نمونه متن تستی",
+  "processed_text": "نمونه متن تستی",
+  "rule_based_detection": false,
+  "ml_detection": false,
+  "ml_confidence": 0.02,
+  "final_prediction": false,
+  "confidence": 0.02,
+  "used_ml_prediction": true
+}
+```
+
+## 🛠️ Customization
+
+- Add more words to `dataset/swear_words.json` and `dataset/normal_words.json`.
+- Retrain the model by deleting the model file or editing the datasets.
+
+## 🐳 Docker Support
+
+Build and run with Docker:
+
+```bash
+docker build -t swear-persian .
+docker run -it swear-persian
+```
+
+## 🤝 Contributing
+
+Pull requests and issues are welcome! Please open an issue to discuss your ideas or report bugs.
+
+## 📄 License
+
+MIT License. See [LICENSE](LICENSE) for details.
+
+---
+
+Made with ❤️ for Persian language processing.
+
