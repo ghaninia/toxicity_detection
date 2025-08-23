@@ -195,7 +195,8 @@ class PersianSwearDetector:
             "ml_detection": False,
             "ml_confidence": 0.0,
             "final_prediction": rule_based_result,
-            "confidence": 0.7 if rule_based_result else 0.0
+            "confidence": 0.7 if rule_based_result else 0.0,
+            "used_ml_prediction": False
         }
         # If model is trained, use ML prediction
         if self.is_trained:
@@ -205,7 +206,8 @@ class PersianSwearDetector:
                 "ml_detection": bool(ml_prediction),
                 "ml_confidence": float(ml_prob),
                 "final_prediction": bool(rule_based_result or ml_prediction),
-                "confidence": float(max(ml_prob, 0.7 if rule_based_result else 0.0))
+                "confidence": float(max(ml_prob, 0.7 if rule_based_result else 0.0)),
+                "used_ml_prediction": True
             })
         return result
 
