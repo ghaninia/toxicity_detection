@@ -1,0 +1,12 @@
+version: '3.8'
+services:
+  swear-detector:
+    build: .
+    container_name: swear-detector
+    volumes:
+      - ./dataset:/app/dataset
+      - ./models:/app/models
+    working_dir: /app
+    tty: true
+    stdin_open: true
+
