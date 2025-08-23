@@ -45,11 +45,6 @@ logs/
 .env.local
 .env.*.local
 
-# Dataset files (optional - remove if you want to commit dataset)
-*.json
-*.csv
-*.txt
-
 # Model files
 *.pkl
 *.model
