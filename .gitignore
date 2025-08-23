@@ -46,7 +46,6 @@ logs/
 .env.*.local
 
 # Dataset files (optional - remove if you want to commit dataset)
-dataset/
 *.json
 *.csv
 *.txt
