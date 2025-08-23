@@ -79,13 +79,3 @@ This project uses machine learning and rule-based methods to detect swear words 
 ## Dataset
 - `dataset/swear_words.json`: List of Persian swear words.
 - `dataset/normal_words.json`: List of normal Persian sentences.
-
-## Model
-- The model is trained automatically if dataset files are present. Otherwise, it loads a pre-trained model from `models/swear_detector_model.pkl`.
-
-## License
-MIT
-
-## Author
-Your Name
-
