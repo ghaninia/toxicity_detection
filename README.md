@@ -30,13 +30,15 @@ A robust and easy-to-use Python tool for detecting Persian (Farsi) swear words i
 ### 1. Clone the Repository
 
 ```bash
-git clone https://github.com/yourusername/swear-persian.git
+git clone https://github.com/yourusername/swear_persian.git
 cd swear-persian
 ```
 
 ### 2. Install Dependencies
 
 ```bash
+python -m venv venv
+source venv/bin/activate
 pip install -r requirements.txt
 ```
 
@@ -86,24 +88,4 @@ python3 swear_detector.py
 - Add more words to `dataset/swear_words.json` and `dataset/normal_words.json`.
 - Retrain the model by deleting the model file or editing the datasets.
 
-## 🐳 Docker Support
-
-Build and run with Docker:
-
-```bash
-docker build -t swear-persian .
-docker run -it swear-persian
-```
-
-## 🤝 Contributing
-
-Pull requests and issues are welcome! Please open an issue to discuss your ideas or report bugs.
-
-## 📄 License
-
-MIT License. See [LICENSE](LICENSE) for details.
-
----
-
-Made with ❤️ for Persian language processing.
 
