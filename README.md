@@ -30,7 +30,7 @@ A robust and easy-to-use Python tool for detecting Persian (Farsi) swear words i
 ### 1. Clone the Repository
 
 ```bash
-git clone https://github.com/yourusername/swear_persian.git
+git clone https://github.com/ghaninia/toxicity_detection.git
 cd swear-persian
 ```
 
