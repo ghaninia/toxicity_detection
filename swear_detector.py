@@ -8,6 +8,7 @@ from sklearn.model_selection import train_test_split
 from persian_tools import digits
 import re
 import pickle
+import pandas as pd
 
 class PersianSwearDetector:
     def __init__(self, model_path=None):
@@ -109,24 +110,38 @@ class PersianSwearDetector:
         print(f"Test accuracy: {test_score:.3f}")
         return train_score, test_score
 
+    def load_dataset(self, dataset_path):
+        """Load and preprocess the labeled dataset."""
+        with open(dataset_path, 'r', encoding='utf-8') as file:
+            data = json.load(file)
+        # Adjusted to handle a flat list of dictionaries
+        df = pd.DataFrame(data)
+        df['text'] = df['text'].apply(self.preprocess_text)
+        return df
+
+    def train_model(self, dataset_path):
+        """Train the model using the labeled dataset."""
+        df = self.load_dataset(dataset_path)
+        X = df['text']
+        y = df['label']
+        X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+        self.pipeline.fit(X_train, y_train)
+        self.is_trained = True
+        print("Model trained successfully.")
+        print("Test accuracy:", self.pipeline.score(X_test, y_test))
+
     def save_model(self, model_path):
-        if not self.is_trained:
-            raise Exception("Model is not trained yet.")
-        try:
-            with open(model_path, 'wb') as f:
-                pickle.dump(self.pipeline, f)
-            print(f"Model saved to {model_path}")
-        except Exception as e:
-            raise Exception(f"Error saving model: {str(e)}")
+        """Save the trained model to a file."""
+        with open(model_path, 'wb') as file:
+            pickle.dump(self.pipeline, file)
+        print(f"Model saved to {model_path}.")
 
     def load_model(self, model_path):
-        try:
-            with open(model_path, 'rb') as f:
-                self.pipeline = pickle.load(f)
-            self.is_trained = True
-            print(f"Model loaded from {model_path}")
-        except Exception as e:
-            raise Exception(f"Error loading model: {str(e)}")
+        """Load a trained model from a file."""
+        with open(model_path, 'rb') as file:
+            self.pipeline = pickle.load(file)
+        self.is_trained = True
+        print(f"Model loaded from {model_path}.")
 
     def rule_based_check(self, text):
         processed_text = self.preprocess_text(text)
@@ -140,9 +155,9 @@ class PersianSwearDetector:
         return False
 
     def predict(self, text):
-        if not isinstance(text, str) or not text.strip():
-            raise ValueError("Invalid input text.")
-
+        """Predict the label of the given text."""
+        if not self.is_trained:
+            raise ValueError("The model is not trained yet.")
         processed_text = self.preprocess_text(text)
         rule_based_result = self.rule_based_check(processed_text)
         rule_based_conf = 0.7 if rule_based_result else 0.0
@@ -171,14 +186,12 @@ class PersianSwearDetector:
         }
 
 def main():
-    MODEL_PATH = "models/swear_detector_model.pkl"
-    SWEAR_WORDS_PATH = "dataset/swear_words.json"
-    NORMAL_WORDS_PATH = "dataset/normal_words.json"
+    MODEL_PATH = "models/model.pkl"
+    DATASET_PATH = "dataset/dataset.json"
     detector = PersianSwearDetector()
     try:
-        if os.path.exists(SWEAR_WORDS_PATH) and os.path.exists(NORMAL_WORDS_PATH):
-            texts, labels = detector.create_training_data_from_json(SWEAR_WORDS_PATH, NORMAL_WORDS_PATH)
-            detector.train(texts, labels)
+        if os.path.exists(DATASET_PATH):
+            detector.train_model(DATASET_PATH)
             detector.save_model(MODEL_PATH)
         elif os.path.exists(MODEL_PATH):
             print("Loading existing model...")
