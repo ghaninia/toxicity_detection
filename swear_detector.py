@@ -197,21 +197,28 @@ def main():
             print("Loading existing model...")
             detector.load_model(MODEL_PATH)
         else:
-            print(json.dumps({"status": "error", "message": "No model or training data found."}))
+            print("No model or training data found.")
             return
         print("\nEnter your text for checking (type 'exit' to quit):")
         while True:
             text = input("\nInput text: ")
             if text.lower() == 'exit':
-                print(json.dumps({"status": "ok", "message": "Exiting..."}))
+                print("Exiting...")
                 break
             try:
                 result = detector.predict(text)
-                print(json.dumps({"status": "ok", "result": result}, ensure_ascii=False, indent=2))
+                print("\nResult:")
+                print(f"  Text: {result['text']}")
+                print(f"  Processed Text: {result['processed_text']}")
+                print(f"  Rule-Based Detection: {result['rule_based_detection']}")
+                print(f"  ML Detection: {result['ml_detection']}")
+                print(f"  ML Confidence: {result['ml_confidence']:.2f}")
+                print(f"  Final Prediction: {result['final_prediction']}")
+                print(f"  Confidence: {result['confidence']:.2f}")
             except Exception as e:
-                print(json.dumps({"status": "error", "message": str(e)}))
+                print(f"Error: {str(e)}")
     except Exception as e:
-        print(json.dumps({"status": "error", "message": str(e)}))
+        print(f"Error: {str(e)}")
 
 if __name__ == "__main__":
     main()
