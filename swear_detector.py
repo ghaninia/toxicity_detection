@@ -132,6 +132,7 @@ class PersianSwearDetector:
 
     def save_model(self, model_path):
         """Save the trained model to a file."""
+        os.makedirs(os.path.dirname(model_path), exist_ok=True)  # Create directory if not exist
         with open(model_path, 'wb') as file:
             pickle.dump(self.pipeline, file)
         print(f"Model saved to {model_path}.")
